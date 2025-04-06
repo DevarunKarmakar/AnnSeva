@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AnnSeva Farming Helper</title>
+    <style>
+        /* Same CSS styles as before */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #e5ddd5;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background: #075e54;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .chat-messages {
+            height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #ece5dd;
+        }
+        .message {
+            margin: 10px;
+            padding: 8px 12px;
+            border-radius: 7px;
+            max-width: 80%;
+        }
+        .user-message {
+            background: #dcf8c6;
+            margin-left: auto;
+        }
+        .bot-message {
+            background: white;
+            margin-right: auto;
+        }
+        .input-area {
+            display: flex;
+            padding: 10px;
+            background: #f0f0f0;
+        }
+        #user-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        #send-btn {
+            padding: 8px 20px;
+            background: #075e54;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>AnnSeva Farming Helper 🌾</h2>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-message">
+                Namaskar! Ask me about:<br>
+                1. Weather advice 🌦️<br>
+                2. Crop care 🌱<br>
+                3. Pest control 🐛<br>
+                4. Soil health 🌾
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type your question...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Fixed responses database
+        const farmingQA = [
+            {
+                keywords: ["weather", "rain", "monsoon", "drought", "sun"],
+                response: "🌦️ Weather Tips:\n• Check IMD forecasts daily\n• Use mulch during drought\n• Clear drainage before monsoon\n• Cover crops during frost"
+            },
+            {
+                keywords: ["crop", "plant", "sow", "harvest", "water"],
+                response: "🌱 Crop Care:\n• Rotate crops yearly\n• Water morning/evening\n• Test soil before planting\n• Use organic fertilizers"
+            },
+            {
+                keywords: ["pest", "insect", "worm", "aphid", "bug"],
+                response: "🐛 Pest Control:\n• Neem oil spray (2% solution)\n• Use yellow sticky traps\n• Remove infected plants\n• Practice crop rotation"
+            },
+            {
+                keywords: ["soil", "fertility", "compost", "ph", "nutrient"],
+                response: "🌾 Soil Health:\n• Ideal pH: 6-7.5\n• Add vermicompost\n• Test soil every 6 months\n• Use green manure crops"
+            }
+        ];
+
+        function getBotResponse(userInput) {
+            const lowerInput = userInput.toLowerCase();
+            
+            // Fixed syntax here
+            const foundQA = farmingQA.find(qa => 
+                qa.keywords.some(keyword => lowerInput.includes(keyword))
+            );
+
+            return foundQA ? foundQA.response : 
+                "Thank you for your question! Our team will reply within 24 hours. 🌻";
+        }
+
+        // Chat interaction
+        document.getElementById("send-btn").addEventListener("click", () => {
+            const userInput = document.getElementById("user-input").value.trim();
+            if (!userInput) return;
+
+            const chatMessages = document.getElementById("chat-messages");
+            
+            // Add user message
+            const userDiv = document.createElement("div");
+            userDiv.className = "message user-message";
+            userDiv.textContent = userInput;
+            chatMessages.appendChild(userDiv);
+
+            // Add bot response
+            const botResponse = getBotResponse(userInput);
+            const botDiv = document.createElement("div");
+            botDiv.className = "message bot-message";
+            botDiv.innerHTML = botResponse.replace(/\n/g, "<br>");
+            
+            chatMessages.appendChild(botDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Clear input
+            document.getElementById("user-input").value = "";
+        });
+
+        // Enter key support
+        document.getElementById("user-input").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") document.getElementById("send-btn").click();
+        });
+    </script>
+</body>
+</html>
